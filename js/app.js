@@ -28,6 +28,7 @@ $(document).ready(function() {
     var stations;
     var markers = [];
 
+
     $.getJSON('https://data.seattle.gov/resource/65fc-btcc.json')
         .done(function(data) {
             stations = data;
@@ -45,8 +46,21 @@ $(document).ready(function() {
                     var html = '<h3>' + camera.cameralabel + '</h3>';
                     html += '<img src=' + camera.imageurl.url + ' alt="camera image">';
                     infoWindow.setContent(html);
-                    infoWindow.open(map, this);
                     map.panTo(marker.getPosition());
+                    infoWindow.open(map, this);
+                });
+
+                $("#search").bind("search keyup", function () {
+                    //iterate over the array to find the string
+                    var searchString = camera.cameralabel.toLowerCase().indexOf(this.value.toLowerCase());
+
+                    if(searchString < 0) {
+                        marker.setMap(null);
+                    }
+                    else {
+                        marker.setMap(map);
+                    }
+
                 });
             });
         })
